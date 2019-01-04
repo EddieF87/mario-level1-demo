@@ -83,11 +83,17 @@ class Mario(var world: World, val playScreen: PlayScreen)
         if(y < 0 && !marioIsDead) {
             killMario()
         }
-        if(x>31.8 && !marioWins) {
+        if(x>31.9 && !marioWins) {
             playScreen.music.stop()
             marioWins = true
+            b2Body.setTransform(31.9F, b2Body.position.y, b2Body.angle)
         }
-
+        if(marioWins) {
+            b2Body.setTransform(31.9F, b2Body.position.y, b2Body.angle)
+        }
+        if(b2Body.position.x < width / 2) {
+            b2Body.setTransform(width / 2, b2Body.position.y, b2Body.angle)
+        }
         if (marioIsBig) {
             setPosition(b2Body.position.x - width / 2, b2Body.position.y - height / 2 - 6 / MarioBros.PPM)
         } else {
@@ -99,6 +105,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
     }
 
     fun getState(): State {
+
         return when {
             marioWins -> State.WIN
             marioIsDead -> State.DEAD
@@ -116,7 +123,6 @@ class Mario(var world: World, val playScreen: PlayScreen)
             State.DEAD, State.WIN -> marioDead
             State.GROWING -> {
                 if (growMario.isAnimationFinished(stateTimer)) {
-                    println("runGrowAnimation = false")
                     runGrowAnimation = false
                 }
                 growMario.getKeyFrame(stateTimer)

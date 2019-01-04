@@ -20,7 +20,6 @@ class Brick(screen: PlayScreen, mapObject: MapObject) : InteractiveTileObject(sc
 
     override fun onHeadHit(mario: Mario) {
         if(mario.marioIsBig) {
-            println("onHeadHit Brick")
             setCategoryFiler(MarioBros.DESTROYED_BIT)
             screen.game.assetManager.get("audio/sounds/breakblock.wav", Sound::class.java).play()
             getCell().tile = null

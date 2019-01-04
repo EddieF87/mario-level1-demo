@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.utils.Array
 import com.mygdx.mariobros.MarioBros
+import com.mygdx.mariobros.scenes.Hud
 import com.mygdx.mariobros.screens.PlayScreen
 import com.mygdx.mariobros.sprites.Mario
 import jdk.nashorn.internal.objects.NativeArray.forEach
@@ -35,7 +36,6 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
     private var deadRotationDegrees = 0F
 
     init {
-        println("koopa init")
         setPosition(posX, posY)
         defineEnemy()
 
@@ -109,7 +109,8 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
             fixture.filterData = filter
         }
         b2body.applyLinearImpulse(Vector2(0F, 5F), b2body.worldCenter, true)
-    }
+        Hud.addScore(200)
+  }
 
     fun kick(speed: Float) {
         velocity.x = speed
@@ -169,7 +170,7 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
 
     override fun onEnemyHit(enemy: Enemy) {
         if (enemy is Koopa && enemy.currentState == Koopa.State.MOVING_SHELL && currentState != Koopa.State.MOVING_SHELL) {
-            makeKoopaIntoStandingShell()
+            destroyKoopa()
         } else {
             reverseVelocity(true, false)
         }

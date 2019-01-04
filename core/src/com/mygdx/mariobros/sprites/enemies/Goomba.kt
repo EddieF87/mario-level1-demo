@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.utils.Array
 import com.mygdx.mariobros.MarioBros
+import com.mygdx.mariobros.scenes.Hud
 import com.mygdx.mariobros.screens.PlayScreen
 import com.mygdx.mariobros.sprites.Mario
 import kotlin.experimental.or
@@ -23,7 +24,6 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
 
 
     init {
-        println("goomba init")
         setPosition(posX, posY)
         defineEnemy()
 
@@ -108,7 +108,6 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
 
     override fun onEnemyHit(enemy: Enemy) {
         if(enemy is Koopa && enemy.currentState == Koopa.State.MOVING_SHELL) {
-            println("OUCHIEMAMA!!!")
             destroyGoomba()
         } else {
             reverseVelocity(true, false)
@@ -118,5 +117,6 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
     fun destroyGoomba() {
         setToDestroy = true
         screen.game.assetManager.get("audio/sounds/stomp.wav", Sound::class.java).play()
+        Hud.addScore(200)
     }
 }

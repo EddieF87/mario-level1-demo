@@ -9,9 +9,6 @@ import com.mygdx.mariobros.sprites.Mario
 abstract class Enemy(screen: PlayScreen, posX: Float, posY: Float) : Sprite() {
 
     val velocity = Vector2(1F, 0F)
-    init {
-        println("Enemy init")
-    }
     abstract fun update(dt: Float)
     abstract fun hitOnHead(mario: Mario)
     abstract fun defineEnemy()

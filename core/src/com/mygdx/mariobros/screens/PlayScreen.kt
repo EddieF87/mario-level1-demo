@@ -50,12 +50,11 @@ class PlayScreen(val game: MarioBros) : Screen {
         gameCamera.position.set((viewport.worldWidth / 2), (viewport.worldHeight / 2), 0F)
         world.setContactListener(WorldContactListener())
         music.isLooping = true
-        music.volume = .2F
+        music.volume = .02F
         music.play()
     }
 
     fun spawnItem(itemDef: ItemDef) {
-        println("spawnItem")
         itemsToSpawn.add(itemDef)
     }
 
@@ -99,7 +98,7 @@ class PlayScreen(val game: MarioBros) : Screen {
         items.forEach { item -> item.update(dt) }
         hud.update(dt)
 
-        if(player.currentState != Mario.State.DEAD) {
+        if(player.currentState != Mario.State.DEAD && player.b2Body.position.x > 2) {
             gameCamera.position.x = player.b2Body.position.x
         }
         if(hud.worldTimer <= 0) {
@@ -151,7 +150,7 @@ class PlayScreen(val game: MarioBros) : Screen {
         return player.currentState == Mario.State.DEAD && player.stateTimer > 3
     }
     fun gameWon() : Boolean {
-        return player.currentState == Mario.State.WIN
+        return player.currentState == Mario.State.WIN && player.stateTimer > 2
     }
 
     override fun resize(width: Int, height: Int) {

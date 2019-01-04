@@ -39,9 +39,6 @@ class Mushroom(val playScreen: PlayScreen, private val posX: Float, private val 
         val shape = CircleShape()
         shape.radius = 4 / MarioBros.PPM
         fdef.filter.categoryBits = MarioBros.ITEM_BIT
-
-        println("mushroom ${MarioBros.ITEM_BIT} fdef.filter.categoryBits = ${fdef.filter.categoryBits}" )
-
         fdef.filter.maskBits = MarioBros.MARIO_BIT or MarioBros.OBJECT_BIT or
                 MarioBros.GROUND_BIT or MarioBros.COIN_BIT or MarioBros.BRICK_BIT
 

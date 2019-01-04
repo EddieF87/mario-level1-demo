@@ -21,7 +21,6 @@ abstract class Item(playScreen: PlayScreen, posX: Float, posY: Float) : Sprite()
 
     open fun update(dt: Float) {
         if(toDestroy && !destroyed) {
-            println("toDestroy && !destroyed")
             world.destroyBody(body)
             destroyed = true
         }
