@@ -15,11 +15,10 @@ import com.mygdx.mariobros.MarioBros
 class Hud (sb : SpriteBatch) : Disposable {
 
 
-    private var worldTimer : Int = 300
+    var worldTimer : Int = 300
     private var timeCount : Float = 0F
     private var camera : OrthographicCamera = OrthographicCamera()
-    private var viewport: Viewport = FitViewport(
-            MarioBros.V_WIDTH.toFloat(), MarioBros.V_HEIGHT.toFloat(), camera)
+    private var viewport: Viewport = FitViewport(MarioBros.V_WIDTH, MarioBros.V_HEIGHT, camera)
     var stage : Stage = Stage(viewport, sb)
 
     val countDownLabel = Label(String.format("%03d", worldTimer), Label.LabelStyle(BitmapFont(), Color.WHITE))
@@ -49,15 +48,20 @@ class Hud (sb : SpriteBatch) : Disposable {
 
     fun update(dt:Float) {
         timeCount+=dt
-        if(timeCount >= 1) {
+        if(timeCount >= 1 && worldTimer > 0) {
             worldTimer--
             countDownLabel.setText(String.format("%03d", worldTimer))
             timeCount--
         }
     }
 
+    fun setScoreNil() {
+        score = 0;
+        scoreLabel.setText(String.format("%06d", score))
+    }
+
     companion object {
-        private var score : Int = 0
+        var score : Int = 0
         val scoreLabel = Label(String.format("%06d", 0), Label.LabelStyle(BitmapFont(), Color.WHITE))
         fun addScore(value : Int) {
             score+=value

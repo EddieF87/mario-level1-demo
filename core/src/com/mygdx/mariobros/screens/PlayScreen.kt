@@ -78,7 +78,7 @@ class PlayScreen(val game: MarioBros) : Screen {
             player.b2Body.applyLinearImpulse(Vector2(0F, 4F), player.b2Body.worldCenter, true)
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.linearVelocity.x <= 2) {
-            player.b2Body.applyLinearImpulse(Vector2(.1F, 0F), player.b2Body.worldCenter, true)
+            player.b2Body.applyLinearImpulse(Vector2(0.1F, 0F), player.b2Body.worldCenter, true)
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.linearVelocity.x >= -2) {
             player.b2Body.applyLinearImpulse(Vector2(-0.1F, 0F), player.b2Body.worldCenter, true)
@@ -101,6 +101,11 @@ class PlayScreen(val game: MarioBros) : Screen {
 
         if(player.currentState != Mario.State.DEAD) {
             gameCamera.position.x = player.b2Body.position.x
+        }
+        if(hud.worldTimer <= 0) {
+            if(!player.marioIsDead) {
+                player.killMario()
+            }
         }
         gameCamera.update()
         renderer.setView(gameCamera)
@@ -133,10 +138,12 @@ class PlayScreen(val game: MarioBros) : Screen {
 
         if(gameOver()) {
             game.screen = GameOverScreen(game)
+            hud.setScoreNil()
             dispose()
         }
         if(gameWon()) {
             game.screen = GameWinScreen(game)
+            dispose()
         }
     }
 

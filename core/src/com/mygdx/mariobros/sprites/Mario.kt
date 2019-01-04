@@ -165,7 +165,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
         }
     }
 
-    private fun killMario() {
+    fun killMario() {
         marioIsDead = true
         playScreen.music.stop()
         playScreen.game.assetManager.get("audio/sounds/mariodie.wav", Sound::class.java).play()
