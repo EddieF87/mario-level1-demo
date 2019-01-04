@@ -73,12 +73,12 @@ class PlayScreen(val game: MarioBros) : Screen {
     }
 
     fun handleInput(dt: Float) {
-        if (player.currentState == Mario.State.DEAD) return
+        if (player.currentState == Mario.State.DEAD || player.currentState == Mario.State.WIN) return
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player.b2Body.applyLinearImpulse(Vector2(0F, 4F), player.b2Body.worldCenter, true)
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.linearVelocity.x <= 2) {
-            player.b2Body.applyLinearImpulse(Vector2(0.1F, 0F), player.b2Body.worldCenter, true)
+            player.b2Body.applyLinearImpulse(Vector2(.1F, 0F), player.b2Body.worldCenter, true)
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.linearVelocity.x >= -2) {
             player.b2Body.applyLinearImpulse(Vector2(-0.1F, 0F), player.b2Body.worldCenter, true)
@@ -135,10 +135,16 @@ class PlayScreen(val game: MarioBros) : Screen {
             game.screen = GameOverScreen(game)
             dispose()
         }
+        if(gameWon()) {
+            game.screen = GameWinScreen(game)
+        }
     }
 
     fun gameOver() : Boolean {
         return player.currentState == Mario.State.DEAD && player.stateTimer > 3
+    }
+    fun gameWon() : Boolean {
+        return player.currentState == Mario.State.WIN
     }
 
     override fun resize(width: Int, height: Int) {

@@ -21,13 +21,14 @@ import com.mygdx.mariobros.sprites.enemies.Koopa
 class Mario(var world: World, val playScreen: PlayScreen)
     : Sprite(playScreen.textureAtlas.findRegion("little_mario")) {
 
-    enum class State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD }
+    enum class State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, WIN }
 
     var currentState = State.STANDING
     var previousState = State.STANDING
     private var runningRight = false
     var marioIsBig = false
     var marioIsDead = false
+    var marioWins = false
     var timeToRedefineMario = false
     private var runGrowAnimation = false
     private var timeToDefineBigMario = false
@@ -82,6 +83,11 @@ class Mario(var world: World, val playScreen: PlayScreen)
         if(y < 0 && !marioIsDead) {
             killMario()
         }
+        if(x>31.8 && !marioWins) {
+            playScreen.music.stop()
+            marioWins = true
+        }
+
         if (marioIsBig) {
             setPosition(b2Body.position.x - width / 2, b2Body.position.y - height / 2 - 6 / MarioBros.PPM)
         } else {
@@ -94,6 +100,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
 
     fun getState(): State {
         return when {
+            marioWins -> State.WIN
             marioIsDead -> State.DEAD
             runGrowAnimation -> State.GROWING
             b2Body.linearVelocity.y > 0 || (b2Body.linearVelocity.y < 0 && previousState == State.JUMPING) -> State.JUMPING
@@ -106,7 +113,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
     fun getFrame(dt: Float): TextureRegion {
         currentState = getState()
         val region = when (currentState) {
-            State.DEAD -> marioDead
+            State.DEAD, State.WIN -> marioDead
             State.GROWING -> {
                 if (growMario.isAnimationFinished(stateTimer)) {
                     println("runGrowAnimation = false")
