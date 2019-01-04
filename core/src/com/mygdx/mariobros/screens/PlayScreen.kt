@@ -74,7 +74,7 @@ class PlayScreen(val game: MarioBros) : Screen {
 
     fun handleInput(dt: Float) {
         if (player.currentState == Mario.State.DEAD || player.currentState == Mario.State.WIN) return
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !(player.currentState == Mario.State.FALLING || player.currentState == Mario.State.FALLING)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && !(player.currentState == Mario.State.JUMPING || player.currentState == Mario.State.FALLING)) {
             player.b2Body.applyLinearImpulse(Vector2(0F, 4F), player.b2Body.worldCenter, true)
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.linearVelocity.x <= 2) {
