@@ -79,6 +79,9 @@ class Mario(var world: World, val playScreen: PlayScreen)
     }
 
     fun update(dt: Float) {
+        if(y < 0 && !marioIsDead) {
+            killMario()
+        }
         if (marioIsBig) {
             setPosition(b2Body.position.x - width / 2, b2Body.position.y - height / 2 - 6 / MarioBros.PPM)
         } else {
@@ -150,14 +153,18 @@ class Mario(var world: World, val playScreen: PlayScreen)
             setBounds(x, y, width, height / 2)
             playScreen.game.assetManager.get("audio/sounds/powerdown.wav", Sound::class.java).play()
         } else {
-            marioIsDead = true
-            playScreen.music.stop()
-            playScreen.game.assetManager.get("audio/sounds/mariodie.wav", Sound::class.java).play()
-            val filter = Filter()
-            filter.maskBits = MarioBros.NOTHING_BIT
-            b2Body.fixtureList.forEach { fixture -> fixture.filterData = filter }
+            killMario()
             b2Body.applyLinearImpulse(Vector2(0F, 4F), b2Body.worldCenter, true)
         }
+    }
+
+    private fun killMario() {
+        marioIsDead = true
+        playScreen.music.stop()
+        playScreen.game.assetManager.get("audio/sounds/mariodie.wav", Sound::class.java).play()
+        val filter = Filter()
+        filter.maskBits = MarioBros.NOTHING_BIT
+        b2Body.fixtureList.forEach { fixture -> fixture.filterData = filter }
     }
 
     fun defineMario() {
