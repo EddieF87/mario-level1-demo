@@ -29,6 +29,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
     var previousState = State.STANDING
     private var runningRight = false
     var marioIsBig = false
+    var marioIsFire = false
     var marioIsDead = false
     var marioWins = false
     var timeToRedefineMario = false
@@ -163,6 +164,11 @@ class Mario(var world: World, val playScreen: PlayScreen)
         playScreen.game.assetManager.get("audio/sounds/powerup.wav", Sound::class.java).play()
     }
 
+    fun becomeFire() {
+        marioIsFire = true
+        playScreen.game.assetManager.get("audio/sounds/powerup.wav", Sound::class.java).play()
+    }
+
     fun hit(enemy: Enemy) {
 
         if (enemy is Koopa && enemy.currentState == Koopa.State.STANDING_SHELL) {
@@ -170,7 +176,10 @@ class Mario(var world: World, val playScreen: PlayScreen)
             enemy.kick(speed)
             return
         }
-        if (marioIsBig) {
+        if (marioIsFire) {
+            marioIsFire = false
+            playScreen.game.assetManager.get("audio/sounds/powerdown.wav", Sound::class.java).play()
+        } else if (marioIsBig) {
             marioIsBig = false
             timeToRedefineMario = true
             setBounds(x, y, width, height / 2)

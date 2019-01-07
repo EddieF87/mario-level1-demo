@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array
 import com.mygdx.mariobros.screens.PlayScreen
 import kotlin.experimental.or
 
-class Fireball(val screen: PlayScreen, val posX: Float, val posY: Float, val goRight : Boolean) : Sprite() {
+class Fireball(val screen: PlayScreen, posX: Float, posY: Float, goRight : Boolean) : Sprite() {
 
     private var stateTime: Float = 0F
     private val animation : Animation<TextureRegion>

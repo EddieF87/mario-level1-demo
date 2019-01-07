@@ -20,7 +20,11 @@ class Mushroom(val playScreen: PlayScreen, private val posX: Float, private val 
 
     override fun use(mario: Mario) {
         body.linearVelocity.x = 0F
-        mario.grow()
+        if(mario.marioIsBig) {
+            mario.becomeFire()
+        } else {
+            mario.grow()
+        }
         destroy()
     }
     override fun setPositionAndBounds() {

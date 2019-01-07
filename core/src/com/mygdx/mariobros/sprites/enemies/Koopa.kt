@@ -110,7 +110,8 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
         }
         b2body.applyLinearImpulse(Vector2(0F, 5F), b2body.worldCenter, true)
         Hud.addScore(200)
-  }
+        screen.game.assetManager.get("audio/sounds/stomp.wav", Sound::class.java).play()
+    }
 
     fun kick(speed: Float) {
         velocity.x = speed
