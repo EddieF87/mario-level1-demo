@@ -46,6 +46,7 @@ class MarioBros : Game() {
         const val ITEM_BIT : Short = 256
         const val MARIO_HEAD_BIT : Short = 512
         const val NOTHING_BIT : Short = 512
+        const val FIREBALL_BIT : Short = 1024
     }
 
     override fun dispose() {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Contact
 import com.badlogic.gdx.physics.box2d.ContactImpulse
 import com.badlogic.gdx.physics.box2d.ContactListener
 import com.badlogic.gdx.physics.box2d.Manifold
+import com.mygdx.mariobros.Fireball
 import com.mygdx.mariobros.MarioBros
 import com.mygdx.mariobros.sprites.Mario
 import com.mygdx.mariobros.sprites.enemies.Enemy
@@ -37,8 +38,8 @@ class WorldContactListener : ContactListener {
                 else (fixB.userData as Mario).hit(fixA.userData as Enemy)
 
             MarioBros.ENEMY_BIT or MarioBros.ENEMY_BIT -> {
-                (fixA.userData as Enemy).onEnemyHit(fixB.userData as Enemy)
-                (fixB.userData as Enemy).onEnemyHit(fixA.userData as Enemy)
+                (fixA.userData as Enemy).onEnemyHitByEnemy(fixB.userData as Enemy)
+                (fixB.userData as Enemy).onEnemyHitByEnemy(fixA.userData as Enemy)
             }
 
             MarioBros.ITEM_BIT or MarioBros.OBJECT_BIT ->
@@ -60,6 +61,24 @@ class WorldContactListener : ContactListener {
                 if (fixA.filterData.categoryBits == MarioBros.MARIO_HEAD_BIT)
                     (fixB.userData as InteractiveTileObject).onHeadHit((fixA.userData as Mario))
                 else (fixA.userData as InteractiveTileObject).onHeadHit((fixB.userData as Mario))
+            }
+            MarioBros.FIREBALL_BIT or MarioBros.ENEMY_BIT -> {
+                println("ENEMYHIT!!")
+                if (fixA.filterData.categoryBits == MarioBros.ENEMY_BIT)
+                    (fixA.userData as Enemy).onEnemyHitByFire()
+                else (fixB.userData as Enemy).onEnemyHitByFire()
+            }
+            MarioBros.FIREBALL_BIT or MarioBros.OBJECT_BIT -> {
+                println("OBJECT_BIT!!")
+                if (fixA.filterData.categoryBits == MarioBros.FIREBALL_BIT)
+                    (fixA.userData as Fireball).reverseXVelocity()
+                else (fixB.userData as Fireball).reverseXVelocity()
+            }
+            MarioBros.FIREBALL_BIT or MarioBros.GROUND_BIT -> {
+                println("GROUND!!")
+                if (fixA.filterData.categoryBits == MarioBros.FIREBALL_BIT)
+                    (fixA.userData as Fireball).bounce()
+                else (fixB.userData as Fireball).bounce()
             }
         }
     }

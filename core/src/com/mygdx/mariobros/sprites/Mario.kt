@@ -2,6 +2,7 @@ package com.mygdx.mariobros.sprites
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
@@ -14,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.BodyDef
+import com.mygdx.mariobros.Fireball
 import com.mygdx.mariobros.sprites.enemies.Enemy
 import com.mygdx.mariobros.sprites.enemies.Koopa
 
@@ -37,6 +39,7 @@ class Mario(var world: World, val playScreen: PlayScreen)
     private var marioRun: Animation<TextureRegion>
     private var bigMarioRun: Animation<TextureRegion>
     private var growMario: Animation<TextureRegion>
+    private var fireballs = Array<Fireball>()
 
     private var marioStand = TextureRegion(playScreen.textureAtlas.findRegion("little_mario"),
             0, 0, 16, 16)
@@ -80,24 +83,31 @@ class Mario(var world: World, val playScreen: PlayScreen)
     }
 
     fun update(dt: Float) {
-        if(y < 0 && !marioIsDead) {
+        if (y < 0 && !marioIsDead) {
             killMario()
         }
-        if(x>31.9 && !marioWins) {
+        if (x > 31.9 && !marioWins) {
             playScreen.music.stop()
             marioWins = true
             b2Body.setTransform(31.9F, b2Body.position.y, b2Body.angle)
         }
-        if(marioWins) {
+        if (marioWins) {
             b2Body.setTransform(31.9F, b2Body.position.y, b2Body.angle)
         }
-        if(b2Body.position.x < width / 2) {
+        if (b2Body.position.x < width / 2) {
             b2Body.setTransform(width / 2, b2Body.position.y, b2Body.angle)
         }
         if (marioIsBig) {
             setPosition(b2Body.position.x - width / 2, b2Body.position.y - height / 2 - 6 / MarioBros.PPM)
         } else {
             setPosition(b2Body.position.x - width / 2, b2Body.position.y - height / 2)
+        }
+        fireballs.forEachIndexed { index, fireball ->
+            if (fireball.destroyed) {
+                fireballs.removeIndex(index)
+            } else {
+                fireball.update(dt)
+            }
         }
         setRegion(getFrame(dt))
         if (timeToDefineBigMario) defineBigMario()
@@ -155,8 +165,8 @@ class Mario(var world: World, val playScreen: PlayScreen)
 
     fun hit(enemy: Enemy) {
 
-        if(enemy is Koopa && enemy.currentState == Koopa.State.STANDING_SHELL) {
-            val speed : Float = if (this.x < enemy.x) Koopa.KICK_RIGHT_SPEED else Koopa.KICK_LEFT_SPEED
+        if (enemy is Koopa && enemy.currentState == Koopa.State.STANDING_SHELL) {
+            val speed: Float = if (this.x < enemy.x) Koopa.KICK_RIGHT_SPEED else Koopa.KICK_LEFT_SPEED
             enemy.kick(speed)
             return
         }
@@ -280,5 +290,20 @@ class Mario(var world: World, val playScreen: PlayScreen)
         b2Body.createFixture(fdef).userData = this
 
         timeToRedefineMario = false
+    }
+
+    fun fire() {
+        fireballs.add(Fireball(playScreen, x, y, runningRight))
+    }
+
+    override fun draw(batch: Batch?) {
+        super.draw(batch)
+        fireballs.forEachIndexed { index, fireball ->
+            if (fireball.destroyed) {
+                fireballs.removeIndex(index)
+            } else {
+                if (batch != null) fireball.draw(batch)
+            }
+        }
     }
 }

@@ -82,6 +82,9 @@ class PlayScreen(val game: MarioBros) : Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.linearVelocity.x >= -2) {
             player.b2Body.applyLinearImpulse(Vector2(-0.1F, 0F), player.b2Body.worldCenter, true)
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            player.fire();
+        }
     }
 
     fun update(dt: Float) {

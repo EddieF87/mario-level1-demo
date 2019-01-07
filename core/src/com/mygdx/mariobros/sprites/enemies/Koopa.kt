@@ -134,7 +134,8 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
                 MarioBros.BRICK_BIT or
                 MarioBros.ENEMY_BIT or
                 MarioBros.OBJECT_BIT or
-                MarioBros.MARIO_BIT)
+                MarioBros.MARIO_BIT or
+                MarioBros.FIREBALL_BIT)
 
         fdef.shape = shape
         b2body.createFixture(fdef).userData = this
@@ -168,11 +169,15 @@ class Koopa(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, po
         }
     }
 
-    override fun onEnemyHit(enemy: Enemy) {
+    override fun onEnemyHitByEnemy(enemy: Enemy) {
         if (enemy is Koopa && enemy.currentState == Koopa.State.MOVING_SHELL && currentState != Koopa.State.MOVING_SHELL) {
             destroyKoopa()
         } else {
             reverseVelocity(true, false)
         }
+    }
+
+    override fun onEnemyHitByFire() {
+        destroyKoopa()
     }
 }

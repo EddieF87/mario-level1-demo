@@ -48,7 +48,6 @@ class B2WorldCreator(playScreen: PlayScreen) {
             body.createFixture(fixtureDef)
         }
         map.layers.get(4).objects.getByType(RectangleMapObject::class.java).forEach { mapObject ->
-            val rectangle = mapObject.rectangle
             Coin(playScreen, mapObject)
         }
         map.layers.get(5).objects.getByType(RectangleMapObject::class.java).forEach { mapObject ->

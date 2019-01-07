@@ -14,7 +14,7 @@ import com.mygdx.mariobros.sprites.Mario
 import kotlin.experimental.or
 
 class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, posX, posY) {
-    private var stateTime: Float = 0.toFloat()
+    private var stateTime: Float = 0F
     private val walkAnimation: Animation<TextureRegion>
     private val frames = Array<TextureRegion>()
     private var setToDestroy: Boolean = false
@@ -68,7 +68,8 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
                 MarioBros.BRICK_BIT or
                 MarioBros.ENEMY_BIT or
                 MarioBros.OBJECT_BIT or
-                MarioBros.MARIO_BIT)
+                MarioBros.MARIO_BIT or
+                MarioBros.FIREBALL_BIT)
 
         fdef.shape = shape
         b2body.createFixture(fdef).userData = this
@@ -106,7 +107,7 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
         return true
     }
 
-    override fun onEnemyHit(enemy: Enemy) {
+    override fun onEnemyHitByEnemy(enemy: Enemy) {
         if(enemy is Koopa && enemy.currentState == Koopa.State.MOVING_SHELL) {
             destroyGoomba()
         } else {
@@ -118,5 +119,9 @@ class Goomba(val screen: PlayScreen, posX: Float, posY: Float) : Enemy(screen, p
         setToDestroy = true
         screen.game.assetManager.get("audio/sounds/stomp.wav", Sound::class.java).play()
         Hud.addScore(200)
+    }
+
+    override fun onEnemyHitByFire() {
+        destroyGoomba()
     }
 }

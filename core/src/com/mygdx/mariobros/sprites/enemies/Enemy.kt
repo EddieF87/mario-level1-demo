@@ -13,7 +13,8 @@ abstract class Enemy(screen: PlayScreen, posX: Float, posY: Float) : Sprite() {
     abstract fun hitOnHead(mario: Mario)
     abstract fun defineEnemy()
     abstract fun setActive(isActive : Boolean): Boolean
-    abstract fun onEnemyHit(enemy: Enemy)
+    abstract fun onEnemyHitByEnemy(enemy: Enemy)
+    abstract fun onEnemyHitByFire()
 
     fun reverseVelocity(x: Boolean, y: Boolean) {
         if(x) {
